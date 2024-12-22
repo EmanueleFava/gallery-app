@@ -28,5 +28,4 @@ const User = sequelize.define("User", {
 Image.belongsTo(User, { foreignKey: "user_id" });
 User.hasMany(Image, { foreignKey: "user_id" });
 
-
 module.exports = User;

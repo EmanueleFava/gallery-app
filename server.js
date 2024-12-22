@@ -8,26 +8,29 @@ const adminRoutes = require("./backend/routes/adminRoutes");
 
 // Connettersi al database
 sequelize
-  .authenticate()
-  .then(() => console.log("Connesso al database!"))
-  .catch((err) => console.error("Errore di connessione al database:", err));
+	.authenticate()
+	.then(() => console.log("Connesso al database!"))
+	.catch((err) => console.error("Errore di connessione al database:", err));
 
 const app = express();
 
 // Middleware
-app.use(cors()); 
+app.use(cors());
 app.use(bodyParser.json()); // Parsing JSON
-app.use(express.json()); 
+app.use(express.json());
 
 // Registrazione delle rotte
 app.use("/api/auth", authRoutes); // Rotte di autenticazione
-app.use("/api/images",imageRoutes); // Rotte immagini
-app.use("/api/admin", adminRoutes); // Rotte admin 
+app.use("/api/images", imageRoutes); // Rotte immagini
+app.use("/api/admin", adminRoutes); // Rotte admin
 
 // Middleware di gestione errori
 app.use((err, req, res, next) => {
 	console.error(err.stack);
-	res.status(500).json({ message: "Errore interno del server", error: err.message });
+	res.status(500).json({
+		message: "Errore interno del server",
+		error: err.message,
+	});
 });
 
 // Avvio del server
