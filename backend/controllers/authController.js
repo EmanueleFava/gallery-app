@@ -93,10 +93,13 @@ const logoutUser = async (req, res) => {
 };
 
 const updateUser = async (req, res) => {
-	const id = req.body.id;
+	const { id } = req.params;
 
 	try {
 		const user = await User.findOne({ where: { id } });
+		if (!user) {
+			return res.status(404).json({ error: "User not found" });
+		}
 		if (user.ruolo == "utente") {
 			const update = await User.update(
 				{
@@ -128,9 +131,60 @@ const updateUser = async (req, res) => {
 			});
 		}
 	} catch (error) {
-		res.status(401).json({ error: "User not found" });
+		res.status(500).json({ error: "Internal server error" });
 	}
 };
+
+
+const updateUsername = async (req, res) => {
+	const { id } = req.params;
+	const newUsername = req.body.username;
+
+	try {
+		const user = await User.findOne({ where: { id } });
+		if (!user) {
+			return res.status(404).json({ error: "User not found", id });
+		}
+		const updateUsername = await User.update({
+			username : newUsername,
+		}, {
+			where : { id : id },
+		})
+		const updatedUser = await User.findOne({ where: { id } });
+		res.status(201).json({
+			messaggio: `utente aggiornato`,
+			updatedUser,
+		});
+
+	} catch (error) {
+		res.status(500).json({ error: "Internal server error" });
+	}
+
+}
+
+
+const updatePassword = async (req, res) => {
+	const { id } = req.params;
+	const newPassword = req.body.password;
+	const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+	try {
+		const user = await User.findOne({ where: { id } });
+		if (!user) {
+			return res.status(404).json({ error: "User not found" });
+		}
+		const updatePassword = await User.update({
+			password: hashedPassword,
+		}, { where : { id : id }})
+		const updatedUser = await User.findOne({ where: { id } });
+		res.status(201).json({
+			messaggio: `utente aggiornato`,
+			updatedUser,
+		});
+	} catch (error) {
+		res.status(500).json({ error: "Internal server error" });
+	}
+}
 
 module.exports = {
 	register,
@@ -139,4 +193,6 @@ module.exports = {
 	logInUser,
 	logoutUser,
 	updateUser,
+	updateUsername,
+	updatePassword,
 };
