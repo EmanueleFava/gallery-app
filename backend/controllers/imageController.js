@@ -79,7 +79,6 @@ const readImages = async (req, res) => {
 	}
 };
 
-// router.get("/:user_id/publicgallery/", authMiddleware, readAllUserImages); // rotta per leggere tutte le immagini
 
 const readAllUserImages = async (req, res) => {
 	const { user_id } = req.params;
