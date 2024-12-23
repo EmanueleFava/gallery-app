@@ -18,9 +18,9 @@ router.post("/registerPremium", registerPremium);
 router.post("/registerAdmin", registerAdmin);
 router.post("/login", logInUser);
 router.post("/logout", logoutUser);
-router.put("/updateuser/:id", authMiddleware, updateUser);
-router.put("/updateusername/:id", authMiddleware, updateUsername);
-router.put("/updatepassword/:id", authMiddleware, updatePassword);
+router.put("/updateUser/:id", authMiddleware, updateUser);
+router.put("/updateUsername/:id", authMiddleware, updateUsername);
+router.put("/updatePassword/:id", authMiddleware, updatePassword);
 
 
 module.exports = router;
