@@ -7,6 +7,8 @@ document.addEventListener("DOMContentLoaded", () => {
 	}
 });
 
+// gestione rendering pagine
+
 function renderHome() {
 	const userLogged = JSON.parse(localStorage.getItem("userLogged"));
 
@@ -126,7 +128,7 @@ function renderHome() {
 					alert("Logout successful!");
 					localStorage.removeItem("token"); // Rimuove il token
 					localStorage.removeItem("userLogged"); // Rimuove i dati utente
-					renderHome(); // Funzione che deve essere definita nel tuo script
+					renderHome(); 
 				} else {
 					const errorData = await response.json();
 					alert(`Error: ${errorData.error}`);
@@ -345,188 +347,7 @@ function renderLogIn() {
 	});
 }
 
-
-async function loadImages(userId, token){
-	try {
-		const response = await fetch(
-			`http://localhost:3000/api/images/${userId}/gallery`,
-			{
-				method: "GET",
-				headers: { 'Authorization': `Bearer ${token}` }
-			},
-		);
-		if (response.ok) {
-			const data = await response.json();
-			console.log("Images loaded!");
-			console.log(data);
-
-			data.forEach(image => {
-				createImages(image.id,image.title,image.url,image.createdAt);
-				insertCarousel(image.id,image.title,image.url,image.createdAt);
-			})
-
-
-		} else {
-			const errorData = await response.json();
-			alert(`Error: ${errorData.error}`);
-		}
-	} catch (err) {
-		alert(`An unexpected error occurred: ${err.message}`);
-	}
-}
-
-function createImages(id,title,url,createdAt){
-
-	const container = document.querySelector(".cards-container");
-
-	// Crea la card
-	const card = document.createElement("article");
-	card.classList.add("card");
-
-	// Immagine
-	const img = document.createElement("img");
-	img.src = url;
-	img.classList.add("card-image");
-	card.appendChild(img);
-
-	// Contenuto della card
-	const cardContent = document.createElement("div");
-	cardContent.classList.add("card-content");
-
-	const h2 = document.createElement("h2");
-	h2.classList.add("card-heading");
-	h2.innerText = title;
-
-	const p = document.createElement("p");
-	p.classList.add("card-description");
-	p.innerHTML = `
-		<strong>Id:</strong> ${id}<br>
-		<strong>Data di creazione:</strong> <br> ${createdAt}
-	`;
-
-	cardContent.appendChild(h2);
-	cardContent.appendChild(p);
-	card.appendChild(cardContent);
-
-	// Gruppo pulsanti
-	const buttonGroup = document.createElement("div");
-	buttonGroup.classList.add("button-group");
-
-	const btnChangeTitle = document.createElement("button");
-	btnChangeTitle.classList.add("primary-btn");
-	btnChangeTitle.innerText = "Edit Title";
-
-	const btnDeleteImage = document.createElement("button");
-	btnDeleteImage.classList.add("delete-btn");
-	btnDeleteImage.innerText = "Delete Image";
-
-	buttonGroup.appendChild(btnChangeTitle);
-	buttonGroup.appendChild(btnDeleteImage);
-	cardContent.appendChild(buttonGroup);
-
-	// Aggiungi la card al container
-	container.appendChild(card);
-
-		// Event listener per "Edit Title"
-		btnChangeTitle.addEventListener("click", async () => {
-			const newTitle = prompt("Inserisci il nuovo titolo:");
-			if (newTitle) {
-				h2.innerText = newTitle;
-
-				try {
-					const token = localStorage.getItem("token");
-					const user = JSON.parse(localStorage.getItem("userLogged"));
-					const username = user.username;
-					const userId = user.id;
-					const response = await fetch(`http://localhost:3000/api/images/${userId}/updateImage/${id}`, {
-						method: "PUT",
-						headers: {
-							"Content-Type": "application/json",
-							Authorization: `Bearer ${token}`,
-						},
-						body: JSON.stringify({ title: newTitle }),
-					});
-					if (response.ok) {
-						const responseData = await response.json();
-						alert("Image updated!!");
-					} else {
-						const errorData = await response.json();
-						alert(`Error: ${errorData.error}`);
-					}
-				} catch (err) {
-					alert(`An unexpected error occurred: ${err.message}`);
-				}
-
-			}
-		});
-	
-		// Event listener per "Delete Image"
-		btnDeleteImage.addEventListener("click", async () => {
-			const confirmDelete = confirm("Sei sicuro di voler eliminare questa immagine?");
-			if (confirmDelete) {
-				try {
-					const token = localStorage.getItem("token");
-					const user = JSON.parse(localStorage.getItem("userLogged"));
-					const username = user.username;
-					const userId = user.id;
-					const response = await fetch(`http://localhost:3000/api/images/${userId}/deleteImage/${id}`, {
-						method: "DELETE",
-						headers: {
-							"Content-Type": "application/json",
-							Authorization: `Bearer ${token}`,
-						}
-					});
-					if (response.ok) {
-						const responseData = await response.json();
-						const photoCountElement = document.querySelector(".photo-count");
-						let currentCount = parseInt(photoCountElement.innerText, 10);
-						currentCount -= 1; // Decrementa il conteggio delle foto
-						photoCountElement.innerText = currentCount;
-						alert("Image Deleted!!");
-						user.photo_count = currentCount;
-						localStorage.setItem("userLogged", JSON.stringify(user));
-						renderGallery();
-					} else {
-						const errorData = await response.json();
-						alert(`Error: ${errorData.error}`);
-					}
-				} catch (err) {
-					alert(`An unexpected error occurred: ${err.message}`);
-				}
-				container.removeChild(card);
-			}
-		});
-
-
-}
-
-function insertCarousel(id,title,url,createdAt){
-
-	const containerCarousel = document.querySelector(".carousel-container");
-	const slide = document.createElement("div");
-	slide.classList.add("carousel-slide");
-	const img = document.createElement("img");
-	img.src = url;
-	slide.appendChild(img);
-	const overlay = document.createElement("div");
-	overlay.classList.add("overlay");
-	overlay.innerHTML = `<p><strong>Titolo</strong>: ${title} <br> <strong>creata</strong>: <br> ${createdAt}</p>`
-	slide.appendChild(overlay);
-	containerCarousel.appendChild(slide);
-
-}
-
-function handleCarouselMove(positive = true) {
-	const carousel = document.querySelector(".carousel-container");
-	const slide = document.querySelector(".carousel-slide");
-	const slideWidth = slide.clientWidth;
-	carousel.scrollLeft = positive ? carousel.scrollLeft + slideWidth : carousel.scrollLeft - slideWidth;
-}
-
-
-
 function renderGallery() {
-
 	const user = JSON.parse(localStorage.getItem("userLogged"));
 	const username = user.username;
 	const userCount = user.photo_count;
@@ -546,8 +367,6 @@ function renderGallery() {
 		<button class="logOutBtn">Log out</button></div>
 	</nav>
 	</header></nav>`;
-
-
 
 	const container = `<div class="gallery-container">
         <div class="header-section">
@@ -608,54 +427,61 @@ function renderGallery() {
 	const cancelBtn = document.getElementById("cancelBtn");
 
 	addPhotoBtn.addEventListener("click", () => {
-		photoForm.style.display = "block"; 
+		photoForm.style.display = "block";
 	});
 
 	cancelBtn.addEventListener("click", () => {
-		photoForm.style.display = "none"; 
-	});
-
-	document.getElementById("addPhotoForm").addEventListener("submit", async (e) => {
-		e.preventDefault();
-
-		const imageUrl = document.getElementById("imageUrl").value;
-		const imageTitle = document.getElementById("imageTitle").value;
-
-
-		try {
-			// router.post("/:user_id/create", authMiddleware, createImage); 
-			const response = await fetch(
-				`http://localhost:3000/api/images/${id}/create`,
-				{
-					method: "POST",
-					headers: { 
-						"Content-Type": "application/json",
-						Authorization: `Bearer ${token}` // Spostato all'interno di headers
-					},
-					body: JSON.stringify({ title: imageTitle, url: imageUrl }),
-				}
-			);
-		
-			if (response.ok) {
-				alert("Image added!");
-				const photoCountElement = document.querySelector(".photo-count");
-				let currentCount = parseInt(photoCountElement.innerText, 10);
-				currentCount += 1; // Decrementa il conteggio delle foto
-				photoCountElement.innerText = currentCount;
-				user.photo_count = currentCount;
-				localStorage.setItem("userLogged", JSON.stringify(user));
-
-				renderGallery(); // Rende nuovamente la galleria
-			} else {
-				const errorData = await response.json();
-				alert(`Error: ${errorData.error}`);
-			}
-		} catch (err) {
-			alert(`An unexpected error occurred: ${err.message}`);
-		}
-
 		photoForm.style.display = "none";
 	});
+
+	document
+		.getElementById("addPhotoForm")
+		.addEventListener("submit", async (e) => {
+			e.preventDefault();
+
+			const imageUrl = document.getElementById("imageUrl").value;
+			const imageTitle = document.getElementById("imageTitle").value;
+
+			try {
+				const response = await fetch(
+					`http://localhost:3000/api/images/${id}/create`,
+					{
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+							Authorization: `Bearer ${token}`, 
+						},
+						body: JSON.stringify({
+							title: imageTitle,
+							url: imageUrl,
+						}),
+					},
+				);
+
+				if (response.ok) {
+					alert("Image added!");
+					const photoCountElement =
+						document.querySelector(".photo-count");
+					let currentCount = parseInt(
+						photoCountElement.innerText,
+						10,
+					);
+					currentCount += 1; // Decrementa il conteggio delle foto
+					photoCountElement.innerText = currentCount;
+					user.photo_count = currentCount;
+					localStorage.setItem("userLogged", JSON.stringify(user));
+
+					renderGallery(); 
+				} else {
+					const errorData = await response.json();
+					alert(`Error: ${errorData.error}`);
+				}
+			} catch (err) {
+				alert(`An unexpected error occurred: ${err.message}`);
+			}
+
+			photoForm.style.display = "none";
+		});
 
 	const home = document.getElementById("home");
 	home.addEventListener("click", () => {
@@ -685,9 +511,9 @@ function renderGallery() {
 
 				if (response.ok) {
 					alert("Logout successful!");
-					localStorage.removeItem("token"); // Rimuove il token
-					localStorage.removeItem("userLogged"); // Rimuove i dati utente
-					renderHome(); // Funzione che deve essere definita nel tuo script
+					localStorage.removeItem("token"); 
+					localStorage.removeItem("userLogged"); 
+					renderHome(); 
 				} else {
 					const errorData = await response.json();
 					alert(`Error: ${errorData.error}`);
@@ -697,4 +523,194 @@ function renderGallery() {
 			}
 		});
 	});
+}
+
+// handling caricamento, creazione di immagini e carosello
+
+async function loadImages(userId, token) {
+	try {
+		const response = await fetch(
+			`http://localhost:3000/api/images/${userId}/gallery`,
+			{
+				method: "GET",
+				headers: { Authorization: `Bearer ${token}` },
+			},
+		);
+		if (response.ok) {
+			const data = await response.json();
+			console.log("Images loaded!");
+			console.log(data);
+
+			data.forEach((image) => {
+				createImages(image.id, image.title, image.url, image.createdAt);
+				insertCarousel(
+					image.id,
+					image.title,
+					image.url,
+					image.createdAt,
+				);
+			});
+		} else {
+			const errorData = await response.json();
+			alert(`Error: ${errorData.error}`);
+		}
+	} catch (err) {
+		alert(`An unexpected error occurred: ${err.message}`);
+	}
+}
+
+function createImages(id, title, url, createdAt) {
+	const container = document.querySelector(".cards-container");
+
+	// Crea la card
+	const card = document.createElement("article");
+	card.classList.add("card");
+
+	// Immagine
+	const img = document.createElement("img");
+	img.src = url;
+	img.classList.add("card-image");
+	card.appendChild(img);
+
+	// Contenuto della card
+	const cardContent = document.createElement("div");
+	cardContent.classList.add("card-content");
+
+	const h2 = document.createElement("h2");
+	h2.classList.add("card-heading");
+	h2.innerText = title;
+
+	const p = document.createElement("p");
+	p.classList.add("card-description");
+	p.innerHTML = `
+		<strong>Id:</strong> ${id}<br>
+		<strong>Data di creazione:</strong> <br> ${createdAt}
+	`;
+
+	cardContent.appendChild(h2);
+	cardContent.appendChild(p);
+	card.appendChild(cardContent);
+
+	// Gruppo pulsanti
+	const buttonGroup = document.createElement("div");
+	buttonGroup.classList.add("button-group");
+
+	const btnChangeTitle = document.createElement("button");
+	btnChangeTitle.classList.add("primary-btn");
+	btnChangeTitle.innerText = "Edit Title";
+
+	const btnDeleteImage = document.createElement("button");
+	btnDeleteImage.classList.add("delete-btn");
+	btnDeleteImage.innerText = "Delete Image";
+
+	buttonGroup.appendChild(btnChangeTitle);
+	buttonGroup.appendChild(btnDeleteImage);
+	cardContent.appendChild(buttonGroup);
+
+	// Aggiungi la card al container
+	container.appendChild(card);
+
+	// Event listener per "Edit Title"
+	btnChangeTitle.addEventListener("click", async () => {
+		const newTitle = prompt("Inserisci il nuovo titolo:");
+		if (newTitle) {
+			h2.innerText = newTitle;
+
+			try {
+				const token = localStorage.getItem("token");
+				const user = JSON.parse(localStorage.getItem("userLogged"));
+				const username = user.username;
+				const userId = user.id;
+				const response = await fetch(
+					`http://localhost:3000/api/images/${userId}/updateImage/${id}`,
+					{
+						method: "PUT",
+						headers: {
+							"Content-Type": "application/json",
+							Authorization: `Bearer ${token}`,
+						},
+						body: JSON.stringify({ title: newTitle }),
+					},
+				);
+				if (response.ok) {
+					const responseData = await response.json();
+					alert("Image updated!!");
+				} else {
+					const errorData = await response.json();
+					alert(`Error: ${errorData.error}`);
+				}
+			} catch (err) {
+				alert(`An unexpected error occurred: ${err.message}`);
+			}
+		}
+	});
+
+	// Event listener per "Delete Image"
+	btnDeleteImage.addEventListener("click", async () => {
+		const confirmDelete = confirm(
+			"Sei sicuro di voler eliminare questa immagine?",
+		);
+		if (confirmDelete) {
+			try {
+				const token = localStorage.getItem("token");
+				const user = JSON.parse(localStorage.getItem("userLogged"));
+				const username = user.username;
+				const userId = user.id;
+				const response = await fetch(
+					`http://localhost:3000/api/images/${userId}/deleteImage/${id}`,
+					{
+						method: "DELETE",
+						headers: {
+							"Content-Type": "application/json",
+							Authorization: `Bearer ${token}`,
+						},
+					},
+				);
+				if (response.ok) {
+					const responseData = await response.json();
+					const photoCountElement =
+						document.querySelector(".photo-count");
+					let currentCount = parseInt(
+						photoCountElement.innerText,
+						10,
+					);
+					currentCount -= 1; // Decrementa il conteggio delle foto
+					photoCountElement.innerText = currentCount;
+					alert("Image Deleted!!");
+					user.photo_count = currentCount;
+					localStorage.setItem("userLogged", JSON.stringify(user));
+					renderGallery();
+				} else {
+					const errorData = await response.json();
+					alert(`Error: ${errorData.error}`);
+				}
+			} catch (err) {
+				alert(`An unexpected error occurred: ${err.message}`);
+			}
+			container.removeChild(card);
+		}
+	});
+}
+
+function insertCarousel(id, title, url, createdAt) {
+	const containerCarousel = document.querySelector(".carousel-container");
+	const slide = document.createElement("div");
+	slide.classList.add("carousel-slide");
+	const img = document.createElement("img");
+	img.src = url;
+	slide.appendChild(img);
+	const overlay = document.createElement("div");
+	overlay.classList.add("overlay");
+	overlay.innerHTML = `<p><strong>Titolo</strong>: ${title} <br> <strong>creata</strong>: <br> ${createdAt}</p>`;
+	slide.appendChild(overlay);
+	containerCarousel.appendChild(slide);
+}
+
+function handleCarouselMove(positive = true) {
+	const carousel = document.querySelector(".carousel-container");
+	const slide = document.querySelector(".carousel-slide");
+	const slideWidth = slide.clientWidth;
+	carousel.scrollLeft = positive
+		? carousel.scrollLeft + slideWidth
+		: carousel.scrollLeft - slideWidth;
 }
