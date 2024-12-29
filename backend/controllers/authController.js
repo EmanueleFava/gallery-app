@@ -5,7 +5,7 @@ const TokenBlacklist = require("../models/TokenBlacklist");
 const generateToken = require("./generateToken");
 
 const register = async (req, res) => {
-	const { username, email, password } = req.body;
+	const { username, email, password, ruolo} = req.body;
 	const hashedPassword = await bcrypt.hash(password, 10);
 
 	try {
@@ -13,7 +13,7 @@ const register = async (req, res) => {
 			username,
 			email,
 			password: hashedPassword,
-			ruolo: "utente",
+			ruolo,
 		});
 		res.status(201).json(user);
 	} catch (error) {
@@ -86,8 +86,9 @@ const logoutUser = async (req, res) => {
 
 		res.status(200).send({ message: "Logged out successfully" });
 	} catch (error) {
-		res.status(401).send({
-			error: "Failed to logout: Invalid token or expired",
+		res.status(401).send(
+			{
+			error: "Failed to logout: Invalid token or expired"
 		});
 	}
 };

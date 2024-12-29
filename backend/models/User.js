@@ -19,6 +19,7 @@ const User = sequelize.define("User", {
 	},
 	ruolo: {
 		type: DataTypes.STRING,
+		allowNull: false,
 	},
 	photo_count: {
 		type: DataTypes.INTEGER,

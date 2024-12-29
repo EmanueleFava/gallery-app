@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Page Title</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
+</head>
+<body>
+    <nav><header class="header">
+        <nav class="navbar" id="doughyNav">
+          <div class="logo">
+            <a href="./pages/home/"><img src="./assets/images/logo.png" alt="doughyClicks" /></a>
+          </div>
+          <div class="buttons">
+            <button class="signUpBtn" id="signUpBtn">Sign up</button>
+            <button class="logInBtn" id="logInBtn">Log in</button></div>
+        </nav>
+      </header></nav>
+      <div class="gallery-container">
+        <div class="header-section">
+          <h1 class="section-title">Place Holder</h1>
+          <div class="user-type">
+            Utente
+            <span class="premium-text">premium</span>
+          </div>
+          <div class="photo-count">3</div>
+          <div class="photo-text">Photos</div>
+        </div>
+
+        <button id="addPhotoBtn" class="add-photo-btn">Add Photo</button>
+
+        <!-- Photo Form (initially hidden) -->
+        <div id="photoForm" class="photo-form-container">
+        <form id="addPhotoForm">
+            <label for="imageUrl">Image URL:</label>
+            <input type="url" id="imageUrl" name="imageUrl" required placeholder="Enter image URL">
+            
+            <label for="imageTitle">Image Title:</label>
+            <input type="text" id="imageTitle" name="imageTitle" required placeholder="Enter image title">
+            
+            <button type="submit" class="submit-btn">Submit</button>
+            <button type="button" id="cancelBtn" class="cancel-btn">Cancel</button>
+        </form>
+        </div>
+
+        <div class="carousel-container">
+          <img
+            loading="lazy"
+            src="https://cdn.builder.io/api/v1/image/assets/TEMP/b8f7e095f2637ea69817b6848e8fe3bf0e6cfe3cf39729aa4b7f46a0be16cf19?placeholderIfAbsent=true&apiKey=735aaac5e1054c82aea7ce162ae1ad36"
+            class="main-image"
+            alt="Featured gallery image"
+          />
+          <div class="carousel-dot" role="button" tabindex="0" aria-label="View image 1"></div>
+          <div class="carousel-dot-active" role="button" tabindex="0" aria-label="Currently viewing image 2"></div>
+          <div class="carousel-dot" role="button" tabindex="0" aria-label="View image 3"></div>
+        </div>
+        <div class="cards-container">
+          <article class="card">
+            <img
+              loading="lazy"
+              src="https://cdn.builder.io/api/v1/image/assets/TEMP/4d5533e6891cf5b3605d0b97f0c7856ee1af36e380b1593b8fdd88b7e7e20ae9?placeholderIfAbsent=true&apiKey=735aaac5e1054c82aea7ce162ae1ad36"
+              class="card-image"
+              alt="Card gallery image 1"
+            />
+            <div class="card-content">
+              <h2 class="card-heading">Card Title</h2>
+              <p class="card-description">
+                Senectus vitae lorem scelerisque potenti dolor
+                <br />
+                scelerisque. Ut integer egestas morbi viverra amet lectus.
+              </p>
+              <div class="button-group">
+                <button class="primary-btn" tabindex="0">Edit Title</button>
+                <button class="secondary-btn" tabindex="0">Change Image</button>
+              </div>
+            </div>
+          </article>
+          <article class="card">
+            <img
+              loading="lazy"
+              src="https://cdn.builder.io/api/v1/image/assets/TEMP/70e8767aaf7101bf12162ede9a9287e699b50b979dfa4fe1f7bca438e068f2b9?placeholderIfAbsent=true&apiKey=735aaac5e1054c82aea7ce162ae1ad36"
+              class="card-image"
+              alt="Card gallery image 2"
+            />
+            <div class="card-content">
+              <h2 class="card-heading">Card Title</h2>
+              <p class="card-description">
+                Senectus vitae lorem scelerisque potenti dolor
+                <br />
+                scelerisque. Ut integer egestas morbi viverra amet lectus.
+              </p>
+              <div class="button-group">
+                <button class="primary-btn" tabindex="0">Edit Title</button>
+                <button class="secondary-btn" tabindex="0">Change Image</button>
+              </div>
+            </div>
+          </article>
+          <article class="card">
+            <img
+              loading="lazy"
+              src="https://cdn.builder.io/api/v1/image/assets/TEMP/057739323163a7ba01285ce5d890735eb8479e4f4b18485f7519c4f6a188fa20?placeholderIfAbsent=true&apiKey=735aaac5e1054c82aea7ce162ae1ad36"
+              class="card-image"
+              alt="Card gallery image 3"
+            />
+            <div class="card-content">
+              <h2 class="card-heading">Card Title</h2>
+              <p class="card-description">
+                Senectus vitae lorem scelerisque potenti dolor
+                <br />
+                scelerisque. Ut integer egestas morbi viverra amet lectus.
+              </p>
+              <div class="button-group">
+                <button class="primary-btn" tabindex="0">Edit Title</button>
+                <button class="secondary-btn" tabindex="0">Change Image</button>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+          <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <a href="./pages/home/"><img src="./assets/images/logo.png" alt="Logo DoughyClicks"></a>
+                </div>
+                <div class="footer-buttons">
+                    <button class="signUpBtn" id="footerSignUpBtn">Sign up</button>
+                    <button class="logInBtn" id="footerLogInBtn">Log in</button>
+                </div>
+            </div>
+        </footer>
+    <script src='./js/app.js'></script>
+</body>
+</html>
