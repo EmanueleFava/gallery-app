@@ -495,7 +495,7 @@ label {
 .cards-container {
     display: flex;
     margin-top: 48px;
-    width: 80%;
+    width: 50%;
     margin: auto;
     margin-top: 48px;
     align-items: center;
@@ -557,7 +557,7 @@ label {
     margin-top: 8px;
     width: 100%;
     align-items: start;
-    gap: 16px;
+    gap: 8px;
     white-space: nowrap;
     letter-spacing: -0.12px;
     /* line-height: 24px; */
@@ -571,7 +571,7 @@ label {
     background: #3BC7F4; /* Colore di background come il pulsante di login */
     gap: 8px;
     overflow: hidden;
-    padding: 12px 24px;
+    padding: 8px 8px;
     color: #fff; /* Colore del testo bianco */
     transition: background-color 0.3s;
     border: none; /* Rimuove il bordo */
@@ -588,7 +588,7 @@ label {
     background-color: #ffffff;
     gap: 8px;
     overflow: hidden;
-    padding: 12px 24px;
+    padding: 8px 8px;
     color: #3BC7F4; /* Colore del testo come il pulsante di login */
     transition: background-color 0.3s, color 0.3s;
     border: 2px solid #3BC7F4; /* Colore del bordo come il pulsante di login */
@@ -599,6 +599,26 @@ label {
     background-color: #3BC7F4; /* Colore di background al passaggio del mouse */
     color: #fff; /* Colore del testo bianco */
 }
+
+.delete-btn {
+    align-self: stretch;
+    border-radius: 6px;
+    background-color: #ED1787;
+    gap: 8px;
+    overflow: hidden;
+    padding: 8px 8px;
+    color: #ffffff; /* Colore del testo come il pulsante di login */
+    border: 2px solid #ED1787; 
+    transition: background-color 0.3s, color 0.3s;
+    box-shadow: none; /* Rimuove l'ombra */
+}
+
+.delete-btn:hover {
+    background-color: #fff; /* Colore di background al passaggio del mouse */
+    color: #ED1787; /* Colore del testo bianco */
+}
+
+
 
 /* Photo Form Container */
 .photo-form-container {
@@ -695,6 +715,14 @@ label {
     transition: background-color 0.6s;
 }
 
+@media (max-width: 1400px){
+    .primary-btn,
+    .secondary-btn,.delete-btn {
+        padding: 10px 10px;
+        font-size: 12px;
+    }
+}
+
 @media (max-width: 1200px){
     .image-container img {
         /* position: absolute; */
@@ -703,6 +731,7 @@ label {
         width: 600px; /* L'immagine sarà più larga per uscire dal contenitore */
         height: auto;
     }
+    
 }
 
 
@@ -726,13 +755,8 @@ label {
     }
     .button-group {
       white-space: initial;
+      font-size: 12px;
     }
-    .primary-btn,
-    .secondary-btn {
-      white-space: initial;
-      padding: 0 20px;
-    }
-    
     .container {
         display: flex;
         justify-content: space-between;
@@ -868,6 +892,12 @@ label {
         color: #262B36;
         line-height: 1.5;
     }
+    .primary-btn,
+    .secondary-btn,.delete-btn {
+        padding: 6px 6px;
+        font-size: 10px;
+    }
+    
 }
 
 

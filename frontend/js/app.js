@@ -345,7 +345,108 @@ function renderLogIn() {
 	});
 }
 
+
+async function loadImages(userId, token){
+	try {
+		const response = await fetch(
+			`http://localhost:3000/api/images/${userId}/gallery`,
+			{
+				method: "GET",
+				headers: { 'Authorization': `Bearer ${token}` }
+			},
+		);
+		if (response.ok) {
+			const data = await response.json();
+			console.log("Images loaded!");
+			console.log(data);
+
+			data.forEach(image => {
+				createImages(image.id,image.title,image.url,image.createdAt);
+			})
+
+		} else {
+			const errorData = await response.json();
+			alert(`Error: ${errorData.error}`);
+		}
+	} catch (err) {
+		alert(`An unexpected error occurred: ${err.message}`);
+	}
+}
+
+function createImages(id,title,url,createdAt){
+
+	const container = document.querySelector(".cards-container");
+
+	// Crea la card
+	const card = document.createElement("article");
+	card.classList.add("card");
+
+	// Immagine
+	const img = document.createElement("img");
+	img.src = url;
+	img.classList.add("card-image");
+	card.appendChild(img);
+
+	// Contenuto della card
+	const cardContent = document.createElement("div");
+	cardContent.classList.add("card-content");
+
+	const h2 = document.createElement("h2");
+	h2.classList.add("card-heading");
+	h2.innerText = title;
+
+	const p = document.createElement("p");
+	p.classList.add("card-description");
+	p.innerHTML = `
+		<strong>Id:</strong> ${id}<br>
+		<strong>Data di creazione:</strong> <br> ${createdAt}
+	`;
+
+	cardContent.appendChild(h2);
+	cardContent.appendChild(p);
+	card.appendChild(cardContent);
+
+	// Gruppo pulsanti
+	const buttonGroup = document.createElement("div");
+	buttonGroup.classList.add("button-group");
+
+	const btnChangeTitle = document.createElement("button");
+	btnChangeTitle.classList.add("primary-btn");
+	btnChangeTitle.innerText = "Edit Title";
+
+
+	const btnChangeUrl = document.createElement("button");
+	btnChangeUrl.classList.add("secondary-btn");
+	btnChangeUrl.innerText = "Change Url";
+
+
+	const btnDeleteImage = document.createElement("button");
+	btnDeleteImage.classList.add("delete-btn");
+	btnDeleteImage.innerText = "Delete Image";
+
+	buttonGroup.appendChild(btnChangeTitle);
+	buttonGroup.appendChild(btnChangeUrl);
+	buttonGroup.appendChild(btnDeleteImage);
+	cardContent.appendChild(buttonGroup);
+
+	// Aggiungi la card al container
+	container.appendChild(card);
+
+}
+
+
+
+
+
 function renderGallery() {
+	const user = JSON.parse(localStorage.getItem("userLogged"));
+	const username = user.username;
+	const userCount = user.photo_count;
+	const ruolo = user.ruolo;
+	const id = user.id;
+	const token = localStorage.getItem("token");
+
+	document.addEventListener("DOMContentLoaded", loadImages(id, token));
 	const body = document.querySelector("body");
 	const navbar = `<nav><header class="header">
 	<nav class="navbar" id="doughyNav">
@@ -357,11 +458,7 @@ function renderGallery() {
 	</nav>
 	</header></nav>`;
 
-	const user = JSON.parse(localStorage.getItem("userLogged"));
-	const username = user.username;
-	const userCount = user.photo_count;
-	const ruolo = user.ruolo;
-	const id = user.id;
+
 
 	const container = `<div class="gallery-container">
         <div class="header-section">
@@ -387,7 +484,9 @@ function renderGallery() {
             <button type="submit" class="submit-btn">Submit</button>
             <button type="button" id="cancelBtn" class="cancel-btn">Cancel</button>
         </form>
-    </div>`;
+    </div>
+	<div class="cards-container">
+	</div>`;
 
 	const footer = ` <footer class="footer">
 	<div class="footer-content">
@@ -409,11 +508,11 @@ function renderGallery() {
 	const cancelBtn = document.getElementById("cancelBtn");
 
 	addPhotoBtn.addEventListener("click", () => {
-		photoForm.style.display = "block"; // Show the form
+		photoForm.style.display = "block"; 
 	});
 
 	cancelBtn.addEventListener("click", () => {
-		photoForm.style.display = "none"; // Hide the form
+		photoForm.style.display = "none"; 
 	});
 
 	document.getElementById("addPhotoForm").addEventListener("submit", (e) => {
