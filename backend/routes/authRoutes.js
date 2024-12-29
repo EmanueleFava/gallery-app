@@ -7,7 +7,7 @@ const {
 	logoutUser,
 	updateUser,
 	updateUsername,
-	updatePassword
+	updatePassword,
 } = require("../controllers/authController");
 const authMiddleware = require("../middlewares/authMiddleware");
 
@@ -21,6 +21,5 @@ router.post("/logout", logoutUser);
 router.put("/updateUser/:id", authMiddleware, updateUser);
 router.put("/updateUsername/:id", authMiddleware, updateUsername);
 router.put("/updatePassword/:id", authMiddleware, updatePassword);
-
 
 module.exports = router;

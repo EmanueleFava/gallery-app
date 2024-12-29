@@ -1,13 +1,13 @@
-document.addEventListener("DOMContentLoaded", ()=>{
+document.addEventListener("DOMContentLoaded", () => {
 	const userLogged = JSON.parse(localStorage.getItem("userLogged"));
 	if (!userLogged) {
 		renderHome();
-  } else {
+	} else {
 		renderGallery();
-  }
+	}
 });
 
-function renderHome(){
+function renderHome() {
 	const userLogged = JSON.parse(localStorage.getItem("userLogged"));
 
 	let navbar = `<nav><header class="header">
@@ -56,7 +56,7 @@ function renderHome(){
 			</div>
 		</div>
 		</footer>`;
-	} 
+	}
 
 	const container = `<div class="container">
         <div class="content">
@@ -95,7 +95,6 @@ function renderHome(){
               </p>
             </div>
     </div>`;
-  
 
 	const body = document.querySelector("body");
 	body.innerHTML = `${navbar}${container}${footer}`;
@@ -104,26 +103,29 @@ function renderHome(){
 	galleryBtn.forEach((button) => {
 		button.addEventListener("click", () => {
 			renderGallery();
-		})
-	})
+		});
+	});
 
 	const logOutBtn = document.querySelectorAll(".logOutBtn");
 	logOutBtn.forEach((button) => {
 		button.addEventListener("click", async () => {
 			try {
-				const token = localStorage.getItem('token');
-				const response = await fetch('http://localhost:3000/api/auth/logout', {
-					method: 'POST',
-					headers: { 
-						'Content-Type': 'application/json',
-						'Authorization': `Bearer ${token}` 
-					}
-				});
+				const token = localStorage.getItem("token");
+				const response = await fetch(
+					"http://localhost:3000/api/auth/logout",
+					{
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+							Authorization: `Bearer ${token}`,
+						},
+					},
+				);
 
 				if (response.ok) {
-					alert('Logout successful!');
-					localStorage.removeItem('token'); // Rimuove il token
-					localStorage.removeItem('userLogged'); // Rimuove i dati utente
+					alert("Logout successful!");
+					localStorage.removeItem("token"); // Rimuove il token
+					localStorage.removeItem("userLogged"); // Rimuove i dati utente
 					renderHome(); // Funzione che deve essere definita nel tuo script
 				} else {
 					const errorData = await response.json();
@@ -135,26 +137,22 @@ function renderHome(){
 		});
 	});
 
-
 	const buttonSignUp = document.querySelectorAll(".signUpBtn");
 	buttonSignUp.forEach((button) => {
-	  button.addEventListener("click", () => {
-		renderSignUp();
-	  });
+		button.addEventListener("click", () => {
+			renderSignUp();
+		});
 	});
 
 	const buttonLogIn = document.querySelectorAll(".logInBtn");
 	buttonLogIn.forEach((button) => {
 		button.addEventListener("click", () => {
 			renderLogIn();
-		})
-	})	
-
+		});
+	});
 }
 
-
-function renderSignUp(){
-
+function renderSignUp() {
 	const body = document.querySelector("body");
 	const navbar = `<nav><header class="header">
 	<nav class="navbar" id="doughyNav">
@@ -194,7 +192,6 @@ function renderSignUp(){
         </div>    
     </div>`;
 
-
 	const footer = ` <footer class="footer">
 	<div class="footer-content">
 		<div class="footer-logo">
@@ -207,7 +204,6 @@ function renderSignUp(){
 	</div>
 	</footer>`;
 
-
 	body.innerHTML = ` ${navbar}${container}${footer}`;
 
 	const formSignUp = document.getElementById("sign-up-form");
@@ -217,17 +213,20 @@ function renderSignUp(){
 		const email = document.getElementById("email").value;
 		const password = document.getElementById("password").value;
 		const ruolo = document.getElementById("role").value;
-	
+
 		try {
-			const response = await fetch('http://localhost:3000/api/auth/register', {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ username, email, password, ruolo })
-			});
-	
+			const response = await fetch(
+				"http://localhost:3000/api/auth/register",
+				{
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify({ username, email, password, ruolo }),
+				},
+			);
+
 			if (response.ok) {
-				alert('Registration successful!');
-				renderLogIn(); 
+				alert("Registration successful!");
+				renderLogIn();
 			} else {
 				const errorData = await response.json();
 				alert(`Error: ${errorData.error}`);
@@ -241,22 +240,21 @@ function renderSignUp(){
 	buttonLogIn.forEach((button) => {
 		button.addEventListener("click", () => {
 			renderLogIn();
-		})
-	})	
+		});
+	});
 
 	const home = document.getElementById("home");
-	home.addEventListener("click",()=>{
+	home.addEventListener("click", () => {
 		renderHome();
-	})
+	});
 
 	const footerHome = document.getElementById("footerLogo");
-	footerHome.addEventListener("click",()=>{
+	footerHome.addEventListener("click", () => {
 		renderHome();
-	})
+	});
 }
 
 function renderLogIn() {
-
 	const body = document.querySelector("body");
 	const navbar = `<nav><header class="header">
 	<nav class="navbar" id="doughyNav">
@@ -296,7 +294,7 @@ function renderLogIn() {
 		</div>
 	</div>
 	</footer>`;
-	
+
 	body.innerHTML = `${navbar}${container}${footer}`;
 
 	const logInForm = document.getElementById("log-in-form");
@@ -304,48 +302,50 @@ function renderLogIn() {
 		e.preventDefault();
 		const username = document.getElementById("username").value;
 		const password = document.getElementById("password").value;
-		
-		try{
-			const response = await fetch('http://localhost:3000/api/auth/login', {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ username, password })
-			});
+
+		try {
+			const response = await fetch(
+				"http://localhost:3000/api/auth/login",
+				{
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify({ username, password }),
+				},
+			);
 			if (response.ok) {
 				const data = await response.json();
-				alert('Login successful!');
+				alert("Login successful!");
 				localStorage.setItem("userLogged", JSON.stringify(data.user));
 				localStorage.setItem("token", data.token);
-				renderGallery(); 
+				renderGallery();
 			} else {
 				const errorData = await response.json();
 				alert(`Error: ${errorData.error}`);
 			}
-		} catch (err){
+		} catch (err) {
 			alert(`An unexpected error occurred: ${err.message}`);
 		}
-
 	});
 
 	const buttonSignUp = document.querySelectorAll(".signUpBtn");
 	buttonSignUp.forEach((button) => {
-	  button.addEventListener("click", () => {
-		renderSignUp();
-	  });
+		button.addEventListener("click", () => {
+			renderSignUp();
+		});
 	});
 
 	const home = document.getElementById("home");
-	home.addEventListener("click",()=>{
+	home.addEventListener("click", () => {
 		renderHome();
-	})
+	});
 
 	const footerHome = document.getElementById("footerLogo");
-	footerHome.addEventListener("click",()=>{
+	footerHome.addEventListener("click", () => {
 		renderHome();
-	})
+	});
 }
 
-function renderGallery(){
+function renderGallery() {
 	const body = document.querySelector("body");
 	const navbar = `<nav><header class="header">
 	<nav class="navbar" id="doughyNav">
@@ -362,9 +362,6 @@ function renderGallery(){
 	const userCount = user.photo_count;
 	const ruolo = user.ruolo;
 	const id = user.id;
-
-
-
 
 	const container = `<div class="gallery-container">
         <div class="header-section">
@@ -390,7 +387,7 @@ function renderGallery(){
             <button type="submit" class="submit-btn">Submit</button>
             <button type="button" id="cancelBtn" class="cancel-btn">Cancel</button>
         </form>
-    </div>`
+    </div>`;
 
 	const footer = ` <footer class="footer">
 	<div class="footer-content">
@@ -405,55 +402,58 @@ function renderGallery(){
 
 	body.innerHTML = ` ${navbar}${container}${footer}`;
 
-	// add Image 
+	// add Image
 
-	const addPhotoBtn = document.getElementById('addPhotoBtn');
-	const photoForm = document.getElementById('photoForm');
-	const cancelBtn = document.getElementById('cancelBtn');
+	const addPhotoBtn = document.getElementById("addPhotoBtn");
+	const photoForm = document.getElementById("photoForm");
+	const cancelBtn = document.getElementById("cancelBtn");
 
-	addPhotoBtn.addEventListener('click', () => {
-	photoForm.style.display = 'block'; // Show the form
+	addPhotoBtn.addEventListener("click", () => {
+		photoForm.style.display = "block"; // Show the form
 	});
 
-	cancelBtn.addEventListener('click', () => {
-	photoForm.style.display = 'none'; // Hide the form
+	cancelBtn.addEventListener("click", () => {
+		photoForm.style.display = "none"; // Hide the form
 	});
 
-	document.getElementById('addPhotoForm').addEventListener('submit', (e) => {
-	e.preventDefault();
-	const imageUrl = document.getElementById('imageUrl').value;
-	const imageTitle = document.getElementById('imageTitle').value;
-	
-	photoForm.style.display = 'none';
+	document.getElementById("addPhotoForm").addEventListener("submit", (e) => {
+		e.preventDefault();
+		const imageUrl = document.getElementById("imageUrl").value;
+		const imageTitle = document.getElementById("imageTitle").value;
+
+		photoForm.style.display = "none";
 	});
 
 	const home = document.getElementById("home");
-	home.addEventListener("click",()=>{
+	home.addEventListener("click", () => {
 		renderHome();
-	})
+	});
 
 	const footerHome = document.getElementById("footerLogo");
-	footerHome.addEventListener("click",()=>{
+	footerHome.addEventListener("click", () => {
 		renderHome();
-	})
-	
+	});
+
 	const logOutBtn = document.querySelectorAll(".logOutBtn");
 	logOutBtn.forEach((button) => {
 		button.addEventListener("click", async () => {
 			try {
-				const token = localStorage.getItem('token');
-				const response = await fetch('http://localhost:3000/api/auth/logout', {
-					method: 'POST',
-					headers: { 
-						'Content-Type': 'application/json',
-						'Authorization': `Bearer ${token}` 
-					}
-				});
+				const token = localStorage.getItem("token");
+				const response = await fetch(
+					"http://localhost:3000/api/auth/logout",
+					{
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+							Authorization: `Bearer ${token}`,
+						},
+					},
+				);
 
 				if (response.ok) {
-					alert('Logout successful!');
-					localStorage.removeItem('token'); // Rimuove il token
-					localStorage.removeItem('userLogged'); // Rimuove i dati utente
+					alert("Logout successful!");
+					localStorage.removeItem("token"); // Rimuove il token
+					localStorage.removeItem("userLogged"); // Rimuove i dati utente
 					renderHome(); // Funzione che deve essere definita nel tuo script
 				} else {
 					const errorData = await response.json();
@@ -464,10 +464,4 @@ function renderGallery(){
 			}
 		});
 	});
-
-
-} 
-
-
-
-
+}

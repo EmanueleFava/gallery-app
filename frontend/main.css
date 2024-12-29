@@ -32,7 +32,7 @@ header {
 }
 
 .buttons {
-    display: flex;
+    /* display: flex; */
     margin-left: auto; /* Spinge il contenitore dei bottoni a destra */
 }
 
@@ -139,8 +139,6 @@ p {
     background-color: #ED1787;
     color: white;
     border: none;
-    padding: 15px 30px; /* Dimensioni più grandi per un aspetto migliore */
-    font-size: 16px;
     border-radius: 8px;
     cursor: pointer;
     transition: background-color 0.3s;
@@ -150,6 +148,7 @@ p {
 .signUpBtn:hover {
     background-color: #3BC7F4;
 }
+
 .container {
     display: flex;
     justify-content: space-between;

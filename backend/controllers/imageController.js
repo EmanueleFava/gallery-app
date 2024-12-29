@@ -79,7 +79,6 @@ const readImages = async (req, res) => {
 	}
 };
 
-
 const readAllUserImages = async (req, res) => {
 	const { user_id } = req.params;
 
