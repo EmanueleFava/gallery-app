@@ -41,28 +41,42 @@ const updateImage = async (req, res) => {
 	const { user_id } = req.params;
 	const { title } = req.body;
 	const { id } = req.params;
-
-	try {
-		const image = await Image.findOne({ where: { id } });
-		if (image) {
-			const update = await Image.update(
-				{
-					title: title,
-				},
-				{
-					where: { id: id },
-				},
-			);
-		}
-		const updatedImage = await Image.findOne({ where: { id } });
-		res.status(201).json({
-			messaggio: `immagine aggiornata`,
-			updatedImage,
-		});
-	} catch (error) {
-		res.status(404).json({ error: "Image not found", error });
+  
+	// Controllo del titolo
+	if (!title) {
+	  return res.status(400).json({ error: "Title is required" });
 	}
-};
+  
+	try {
+	  // Trova l'immagine associata all'utente
+	  const image = await Image.findOne({ where: { id, user_id } });
+	  if (!image) {
+		return res.status(404).json({ error: "Image not found" });
+	  }
+  
+	  // Aggiorna l'immagine
+	  const [updatedRows] = await Image.update(
+		{ title: title },
+		{ where: { id: id, user_id: user_id } }
+	  );
+  
+	  if (updatedRows === 0) {
+		return res.status(404).json({ error: "Image not updated" });
+	  }
+  
+	  // Recupera l'immagine aggiornata
+	  const updatedImage = await Image.findOne({ where: { id } });
+  
+	  // Rispondi con successo
+	  res.status(200).json({
+		messaggio: `Immagine aggiornata con successo`,
+		updatedImage,
+	  });
+	} catch (error) {
+	  res.status(500).json({ error: "Internal server error", details: error.message });
+	}
+  };
+  
 
 const readImages = async (req, res) => {
 	const { user_id } = req.params;

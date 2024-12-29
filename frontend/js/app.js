@@ -362,7 +362,9 @@ async function loadImages(userId, token){
 
 			data.forEach(image => {
 				createImages(image.id,image.title,image.url,image.createdAt);
+				insertCarousel(image.id,image.title,image.url,image.createdAt);
 			})
+
 
 		} else {
 			const errorData = await response.json();
@@ -414,31 +416,117 @@ function createImages(id,title,url,createdAt){
 	btnChangeTitle.classList.add("primary-btn");
 	btnChangeTitle.innerText = "Edit Title";
 
-
-	const btnChangeUrl = document.createElement("button");
-	btnChangeUrl.classList.add("secondary-btn");
-	btnChangeUrl.innerText = "Change Url";
-
-
 	const btnDeleteImage = document.createElement("button");
 	btnDeleteImage.classList.add("delete-btn");
 	btnDeleteImage.innerText = "Delete Image";
 
 	buttonGroup.appendChild(btnChangeTitle);
-	buttonGroup.appendChild(btnChangeUrl);
 	buttonGroup.appendChild(btnDeleteImage);
 	cardContent.appendChild(buttonGroup);
 
 	// Aggiungi la card al container
 	container.appendChild(card);
 
+		// Event listener per "Edit Title"
+		btnChangeTitle.addEventListener("click", async () => {
+			const newTitle = prompt("Inserisci il nuovo titolo:");
+			if (newTitle) {
+				h2.innerText = newTitle;
+
+				try {
+					const token = localStorage.getItem("token");
+					const user = JSON.parse(localStorage.getItem("userLogged"));
+					const username = user.username;
+					const userId = user.id;
+					const response = await fetch(`http://localhost:3000/api/images/${userId}/updateImage/${id}`, {
+						method: "PUT",
+						headers: {
+							"Content-Type": "application/json",
+							Authorization: `Bearer ${token}`,
+						},
+						body: JSON.stringify({ title: newTitle }),
+					});
+					if (response.ok) {
+						const responseData = await response.json();
+						alert("Image updated!!");
+					} else {
+						const errorData = await response.json();
+						alert(`Error: ${errorData.error}`);
+					}
+				} catch (err) {
+					alert(`An unexpected error occurred: ${err.message}`);
+				}
+
+			}
+		});
+	
+		// Event listener per "Delete Image"
+		btnDeleteImage.addEventListener("click", async () => {
+			const confirmDelete = confirm("Sei sicuro di voler eliminare questa immagine?");
+			if (confirmDelete) {
+				try {
+					const token = localStorage.getItem("token");
+					const user = JSON.parse(localStorage.getItem("userLogged"));
+					const username = user.username;
+					const userId = user.id;
+					const response = await fetch(`http://localhost:3000/api/images/${userId}/deleteImage/${id}`, {
+						method: "DELETE",
+						headers: {
+							"Content-Type": "application/json",
+							Authorization: `Bearer ${token}`,
+						}
+					});
+					if (response.ok) {
+						const responseData = await response.json();
+						const photoCountElement = document.querySelector(".photo-count");
+						let currentCount = parseInt(photoCountElement.innerText, 10);
+						currentCount -= 1; // Decrementa il conteggio delle foto
+						photoCountElement.innerText = currentCount;
+						alert("Image Deleted!!");
+						user.photo_count = currentCount;
+						localStorage.setItem("userLogged", JSON.stringify(user));
+						renderGallery();
+					} else {
+						const errorData = await response.json();
+						alert(`Error: ${errorData.error}`);
+					}
+				} catch (err) {
+					alert(`An unexpected error occurred: ${err.message}`);
+				}
+				container.removeChild(card);
+			}
+		});
+
+
+}
+
+function insertCarousel(id,title,url,createdAt){
+
+	const containerCarousel = document.querySelector(".carousel-container");
+	const slide = document.createElement("div");
+	slide.classList.add("carousel-slide");
+	const img = document.createElement("img");
+	img.src = url;
+	slide.appendChild(img);
+	const overlay = document.createElement("div");
+	overlay.classList.add("overlay");
+	overlay.innerHTML = `<p><strong>Titolo</strong>: ${title} <br> <strong>creata</strong>: <br> ${createdAt}</p>`
+	slide.appendChild(overlay);
+	containerCarousel.appendChild(slide);
+
+}
+
+function handleCarouselMove(positive = true) {
+	const carousel = document.querySelector(".carousel-container");
+	const slide = document.querySelector(".carousel-slide");
+	const slideWidth = slide.clientWidth;
+	carousel.scrollLeft = positive ? carousel.scrollLeft + slideWidth : carousel.scrollLeft - slideWidth;
 }
 
 
 
-
-
 function renderGallery() {
+
 	const user = JSON.parse(localStorage.getItem("userLogged"));
 	const username = user.username;
 	const userCount = user.photo_count;
@@ -447,6 +535,7 @@ function renderGallery() {
 	const token = localStorage.getItem("token");
 
 	document.addEventListener("DOMContentLoaded", loadImages(id, token));
+
 	const body = document.querySelector("body");
 	const navbar = `<nav><header class="header">
 	<nav class="navbar" id="doughyNav">
@@ -485,6 +574,19 @@ function renderGallery() {
             <button type="button" id="cancelBtn" class="cancel-btn">Cancel</button>
         </form>
     </div>
+	<div class="carousel"><button class="carousel-arrow carousel-arrow--prev" onclick="handleCarouselMove(false)">
+    &#8249;
+	</button>
+	<button class="carousel-arrow carousel-arrow--next" onclick="handleCarouselMove()">
+    &#8250;
+	</button>
+  
+  	<div class="carousel-container" dir="ltr">
+  	</div></div>
+
+	<img src="./assets/images/donuts.png" alt="donutsLogo" class="donut"/>
+
+
 	<div class="cards-container">
 	</div>`;
 
@@ -501,8 +603,6 @@ function renderGallery() {
 
 	body.innerHTML = ` ${navbar}${container}${footer}`;
 
-	// add Image
-
 	const addPhotoBtn = document.getElementById("addPhotoBtn");
 	const photoForm = document.getElementById("photoForm");
 	const cancelBtn = document.getElementById("cancelBtn");
@@ -515,10 +615,44 @@ function renderGallery() {
 		photoForm.style.display = "none"; 
 	});
 
-	document.getElementById("addPhotoForm").addEventListener("submit", (e) => {
+	document.getElementById("addPhotoForm").addEventListener("submit", async (e) => {
 		e.preventDefault();
+
 		const imageUrl = document.getElementById("imageUrl").value;
 		const imageTitle = document.getElementById("imageTitle").value;
+
+
+		try {
+			// router.post("/:user_id/create", authMiddleware, createImage); 
+			const response = await fetch(
+				`http://localhost:3000/api/images/${id}/create`,
+				{
+					method: "POST",
+					headers: { 
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${token}` // Spostato all'interno di headers
+					},
+					body: JSON.stringify({ title: imageTitle, url: imageUrl }),
+				}
+			);
+		
+			if (response.ok) {
+				alert("Image added!");
+				const photoCountElement = document.querySelector(".photo-count");
+				let currentCount = parseInt(photoCountElement.innerText, 10);
+				currentCount += 1; // Decrementa il conteggio delle foto
+				photoCountElement.innerText = currentCount;
+				user.photo_count = currentCount;
+				localStorage.setItem("userLogged", JSON.stringify(user));
+
+				renderGallery(); // Rende nuovamente la galleria
+			} else {
+				const errorData = await response.json();
+				alert(`Error: ${errorData.error}`);
+			}
+		} catch (err) {
+			alert(`An unexpected error occurred: ${err.message}`);
+		}
 
 		photoForm.style.display = "none";
 	});
