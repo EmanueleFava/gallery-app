@@ -1,11 +1,43 @@
+// gestione sessione token expired
+
+function checkTokenValidity() {
+	const token = localStorage.getItem("token");
+	const tokenCreationTime = localStorage.getItem("tokenCreationTime");
+
+	if (token && tokenCreationTime) {
+		const currentTime = Date.now();
+		const elapsedTime = currentTime - tokenCreationTime; // Tempo trascorso in millisecondi
+
+		// Controlla se è passato più di 1 ora (3600000 ms)
+		if (elapsedTime > 3600000) {
+			localStorage.removeItem("token");
+			localStorage.removeItem("userLogged");
+			localStorage.removeItem("tokenCreationTime");
+			alert("Session expired. Please log in again.");
+			renderHome(); // Reindirizza l'utente alla pagina di login
+		}
+	} else {
+		// Se il token o il timestamp non esistono, reindirizza al login
+		renderHome(); 
+	}
+}
+
+
+// evento di caricamento pagine
+
+
 document.addEventListener("DOMContentLoaded", () => {
 	const userLogged = JSON.parse(localStorage.getItem("userLogged"));
+	checkTokenValidity();
+
+	setInterval(checkTokenValidity, 60000); // 1 minuto
 	if (!userLogged) {
 		renderHome();
 	} else {
 		renderGallery();
 	}
 });
+
 
 // gestione rendering pagine
 
@@ -319,6 +351,7 @@ function renderLogIn() {
 				alert("Login successful!");
 				localStorage.setItem("userLogged", JSON.stringify(data.user));
 				localStorage.setItem("token", data.token);
+				localStorage.setItem("tokenCreationTime", Date.now()); // Salva il timestamp
 				renderGallery();
 			} else {
 				const errorData = await response.json();
@@ -354,6 +387,7 @@ function renderGallery() {
 	const ruolo = user.ruolo;
 	const id = user.id;
 	const token = localStorage.getItem("token");
+	checkTokenValidity();
 
 	document.addEventListener("DOMContentLoaded", loadImages(id, token));
 

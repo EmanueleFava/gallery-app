@@ -841,13 +841,6 @@ label {
   }
   
   
-  @media (max-width: 600px) {
-    .carousel-slide {
-      flex: 1 0 90%;
-    }
-      
-  }
-  
 
 
 @media (max-width: 1400px){
@@ -973,6 +966,14 @@ label {
       }
 
 }
+
+@media (max-width: 600px) {
+    .carousel-slide {
+      flex: 1 0 90%;
+    }
+      
+}
+  
 
 
 @media (max-width: 570px) {
