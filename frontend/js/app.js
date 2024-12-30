@@ -1,5 +1,6 @@
 // gestione sessione token expired
 
+
 function checkTokenValidity() {
 	const token = localStorage.getItem("token");
 	const tokenCreationTime = localStorage.getItem("tokenCreationTime");
@@ -41,6 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // gestione rendering pagine
 
+
 function renderHome() {
 	const userLogged = JSON.parse(localStorage.getItem("userLogged"));
 
@@ -75,6 +77,7 @@ function renderHome() {
 			</div>
 			<div class="buttons">
 			<button class="galleryBtn">Gallery</button>
+			<button class="publicGalleryBtn">Public Gallery</button>
 			<button class="logOutBtn">Log out</button></div>
 		</nav>
 		</header></nav>`;
@@ -86,6 +89,7 @@ function renderHome() {
 			</div>
 			<div class="footer-buttons">
 				<button class="galleryBtn">Gallery</button>
+				<button class="publicGalleryBtn">Public Gallery</button>
 				<button class="logOutBtn">Log out</button>
 			</div>
 		</div>
@@ -137,6 +141,13 @@ function renderHome() {
 	galleryBtn.forEach((button) => {
 		button.addEventListener("click", () => {
 			renderGallery();
+		});
+	});
+
+	const publicGalleryBtn = document.querySelectorAll(".publicGalleryBtn");
+	publicGalleryBtn.forEach((button) => {
+		button.addEventListener("click", () => {
+			renderPublicGallery();
 		});
 	});
 
@@ -398,6 +409,7 @@ function renderGallery() {
 		<img src="./assets/images/logo.png" alt="doughyClicks" id="home"/>
 		</div>
 		<div class="buttons">
+		<button class="publicGalleryBtn">Public Gallery</button>
 		<button class="logOutBtn">Log out</button></div>
 	</nav>
 	</header></nav>`;
@@ -449,6 +461,7 @@ function renderGallery() {
 			<img src="./assets/images/logo.png" alt="Logo DoughyClicks" id="footerLogo">
 		</div>
 		<div class="footer-buttons">
+			<button class="publicGalleryBtn">Public Gallery</button>
 			<button class="logOutBtn">Log out</button></div>
 		</div>
 	</div>
@@ -527,6 +540,14 @@ function renderGallery() {
 		renderHome();
 	});
 
+	const publicGalleryBtn = document.querySelectorAll(".publicGalleryBtn");
+	publicGalleryBtn.forEach((button) => {
+		button.addEventListener("click", () => {
+			renderPublicGallery();
+		});
+	});
+
+
 	const logOutBtn = document.querySelectorAll(".logOutBtn");
 	logOutBtn.forEach((button) => {
 		button.addEventListener("click", async () => {
@@ -559,6 +580,115 @@ function renderGallery() {
 	});
 }
 
+function renderPublicGallery(){
+
+	const user = JSON.parse(localStorage.getItem("userLogged"));
+	const username = user.username;
+	const userCount = user.photo_count;
+	const ruolo = user.ruolo;
+	const id = user.id;
+	const token = localStorage.getItem("token");
+	checkTokenValidity();
+	document.addEventListener("DOMContentLoaded", loadAllImages(id, token));
+
+	
+	const body = document.querySelector("body");
+	const navbar = `<nav><header class="header">
+	<nav class="navbar" id="doughyNav">
+		<div class="logo">
+		<img src="./assets/images/logo.png" alt="doughyClicks" id="home"/>
+		</div>
+		<div class="buttons">
+		<button class="galleryBtn">Gallery</button>
+		<button class="logOutBtn">Log out</button></div>
+	</nav>
+	</header></nav>`;
+
+	const container = `<div class="gallery-container">
+        <div class="header-section">
+          <h1 class="section-title">Public Gallery</h1>
+          <div class="photo-text">Photos</div>
+        </div>
+	<div class="carousel"><button class="carousel-arrow-public carousel-arrow--prev" onclick="handleCarouselMove(false)">
+    &#8249;
+	</button>
+	<button class="carousel-arrow-public carousel-arrow--next" onclick="handleCarouselMove()">
+    &#8250;
+	</button>
+  
+  	<div class="carousel-container" dir="ltr">
+  	</div></div>
+
+	<img src="./assets/images/donuts.png" alt="donutsLogo" class="donut"/>
+
+
+	<div class="cards-container">
+	</div>`;
+
+	const footer = ` <footer class="footer">
+	<div class="footer-content">
+		<div class="footer-logo">
+			<img src="./assets/images/logo.png" alt="Logo DoughyClicks" id="footerLogo">
+		</div>
+		<div class="footer-buttons">
+			<button class="galleryBtn">Gallery</button>
+			<button class="logOutBtn">Log out</button></div>
+		</div>
+	</div>
+	</footer>`;
+
+	body.innerHTML = ` ${navbar}${container}${footer}`;
+
+	const home = document.getElementById("home");
+	home.addEventListener("click", () => {
+		renderHome();
+	});
+
+	const footerHome = document.getElementById("footerLogo");
+	footerHome.addEventListener("click", () => {
+		renderHome();
+	});
+
+	const logOutBtn = document.querySelectorAll(".logOutBtn");
+	logOutBtn.forEach((button) => {
+		button.addEventListener("click", async () => {
+			try {
+				const token = localStorage.getItem("token");
+				const response = await fetch(
+					"http://localhost:3000/api/auth/logout",
+					{
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+							Authorization: `Bearer ${token}`,
+						},
+					},
+				);
+
+				if (response.ok) {
+					alert("Logout successful!");
+					localStorage.removeItem("token"); 
+					localStorage.removeItem("userLogged"); 
+					renderHome(); 
+				} else {
+					const errorData = await response.json();
+					alert(`Error: ${errorData.error}`);
+				}
+			} catch (err) {
+				alert(`An unexpected error occurred: ${err.message}`);
+			}
+		});
+	});
+
+	const galleryBtn = document.querySelectorAll(".galleryBtn");
+	galleryBtn.forEach((button) => {
+		button.addEventListener("click", () => {
+			renderGallery();
+		});
+	});
+
+}
+
 // handling caricamento, creazione di immagini e carosello
 
 async function loadImages(userId, token) {
@@ -577,6 +707,38 @@ async function loadImages(userId, token) {
 
 			data.forEach((image) => {
 				createImages(image.id, image.title, image.url, image.createdAt);
+				insertCarousel(
+					image.id,
+					image.title,
+					image.url,
+					image.createdAt,
+				);
+			});
+		} else {
+			const errorData = await response.json();
+			alert(`Error: ${errorData.error}`);
+		}
+	} catch (err) {
+		alert(`An unexpected error occurred: ${err.message}`);
+	}
+}
+
+async function loadAllImages(userId, token){
+	try {
+		const response = await fetch(
+			`http://localhost:3000/api/images/${userId}/publicGallery`,
+			{
+				method: "GET",
+				headers: { Authorization: `Bearer ${token}` },
+			},
+		);
+		if (response.ok) {
+			const data = await response.json();
+			console.log("Images loaded!");
+			console.log(data);
+
+			data.forEach((image) => {
+				createAllUserImages(image.id, image.title, image.url, image.createdAt);
 				insertCarousel(
 					image.id,
 					image.title,
@@ -724,6 +886,44 @@ function createImages(id, title, url, createdAt) {
 			container.removeChild(card);
 		}
 	});
+}
+
+function createAllUserImages(id, title, url, createdAt) {
+	const container = document.querySelector(".cards-container");
+
+	// Crea la card
+	const card = document.createElement("article");
+	card.classList.add("card");
+
+	// Immagine
+	const img = document.createElement("img");
+	img.src = url;
+	img.classList.add("card-image");
+	card.appendChild(img);
+
+	// Contenuto della card
+	const cardContent = document.createElement("div");
+	cardContent.classList.add("card-content");
+
+	const h2 = document.createElement("h2");
+	h2.classList.add("card-heading");
+	h2.innerText = title;
+
+	const p = document.createElement("p");
+	p.classList.add("card-description");
+	p.innerHTML = `
+		<strong>Id:</strong> ${id}<br>
+		<strong>Data di creazione:</strong> <br> ${createdAt}
+	`;
+
+	cardContent.appendChild(h2);
+	cardContent.appendChild(p);
+	card.appendChild(cardContent);
+
+
+	// Aggiungi la card al container
+	container.appendChild(card);
+
 }
 
 function insertCarousel(id, title, url, createdAt) {
