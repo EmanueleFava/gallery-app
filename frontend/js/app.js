@@ -28,7 +28,6 @@ function checkTokenValidity() {
 }
 
 
-
 // ---------------------------------------------------------------------------------------------------
 // evento di caricamento pagine
 // ---------------------------------------------------------------------------------------------------
@@ -45,7 +44,6 @@ document.addEventListener("DOMContentLoaded", () => {
 		renderGallery();
 	}
 });
-
 
 
 // ---------------------------------------------------------------------------------------------------
@@ -149,21 +147,24 @@ function renderHome() {
 
 	const galleryBtn = document.querySelectorAll(".galleryBtn");
 	galleryBtn.forEach((button) => {
-		button.addEventListener("click", () => {
+		button.addEventListener("click", (e) => {
+			e.preventDefault();
 			renderGallery();
 		});
 	});
 
 	const publicGalleryBtn = document.querySelectorAll(".publicGalleryBtn");
 	publicGalleryBtn.forEach((button) => {
-		button.addEventListener("click", () => {
+		button.addEventListener("click", (e) => {
+			e.preventDefault();
 			renderPublicGallery();
 		});
 	});
 
 	const logOutBtn = document.querySelectorAll(".logOutBtn");
 	logOutBtn.forEach((button) => {
-		button.addEventListener("click", async () => {
+		button.addEventListener("click", async (e) => {
+			e.preventDefault();
 			try {
 				const token = localStorage.getItem("token");
 				const response = await fetch(
@@ -194,14 +195,16 @@ function renderHome() {
 
 	const buttonSignUp = document.querySelectorAll(".signUpBtn");
 	buttonSignUp.forEach((button) => {
-		button.addEventListener("click", () => {
+		button.addEventListener("click", (e) => {
+			e.preventDefault();
 			renderSignUp();
 		});
 	});
 
 	const buttonLogIn = document.querySelectorAll(".logInBtn");
 	buttonLogIn.forEach((button) => {
-		button.addEventListener("click", () => {
+		button.addEventListener("click", (e) => {
+			e.preventDefault();
 			renderLogIn();
 		});
 	});
@@ -696,7 +699,6 @@ function renderPublicGallery() {
 }
 
 
-
 // ---------------------------------------------------------------------------------------------------
 // handling caricamento, creazione di immagini e carosello
 // ---------------------------------------------------------------------------------------------------
@@ -823,7 +825,8 @@ function createImages(id, title, url, createdAt) {
 	container.appendChild(card);
 
 	// Event listener per "Edit Title"
-	btnChangeTitle.addEventListener("click", async () => {
+	btnChangeTitle.addEventListener("click", async (e) => {
+		e.preventDefault();
 		const newTitle = prompt("Inserisci il nuovo titolo:");
 		if (newTitle) {
 			h2.innerText = newTitle;
@@ -858,7 +861,8 @@ function createImages(id, title, url, createdAt) {
 	});
 
 	// Event listener per "Delete Image"
-	btnDeleteImage.addEventListener("click", async () => {
+	btnDeleteImage.addEventListener("click", async (e) => {
+		e.preventDefault();
 		const confirmDelete = confirm(
 			"Sei sicuro di voler eliminare questa immagine?",
 		);
