@@ -1,4 +1,9 @@
+
+
+// ---------------------------------------------------------------------------------------------------
 // gestione sessione token expired
+// ---------------------------------------------------------------------------------------------------
+
 
 function checkTokenValidity() {
 	const token = localStorage.getItem("token");
@@ -22,7 +27,12 @@ function checkTokenValidity() {
 	}
 }
 
+
+
+// ---------------------------------------------------------------------------------------------------
 // evento di caricamento pagine
+// ---------------------------------------------------------------------------------------------------
+
 
 document.addEventListener("DOMContentLoaded", () => {
 	const userLogged = JSON.parse(localStorage.getItem("userLogged"));
@@ -36,7 +46,12 @@ document.addEventListener("DOMContentLoaded", () => {
 	}
 });
 
+
+
+// ---------------------------------------------------------------------------------------------------
 // gestione rendering pagine
+// ---------------------------------------------------------------------------------------------------
+
 
 function renderHome() {
 	const userLogged = JSON.parse(localStorage.getItem("userLogged"));
@@ -680,7 +695,12 @@ function renderPublicGallery() {
 	});
 }
 
+
+
+// ---------------------------------------------------------------------------------------------------
 // handling caricamento, creazione di immagini e carosello
+// ---------------------------------------------------------------------------------------------------
+
 
 async function loadImages(userId, token) {
 	try {
