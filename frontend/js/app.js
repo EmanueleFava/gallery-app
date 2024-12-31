@@ -1,6 +1,5 @@
 // gestione sessione token expired
 
-
 function checkTokenValidity() {
 	const token = localStorage.getItem("token");
 	const tokenCreationTime = localStorage.getItem("tokenCreationTime");
@@ -19,13 +18,11 @@ function checkTokenValidity() {
 		}
 	} else {
 		// Se il token o il timestamp non esistono, reindirizza al login
-		renderHome(); 
+		renderHome();
 	}
 }
 
-
 // evento di caricamento pagine
-
 
 document.addEventListener("DOMContentLoaded", () => {
 	const userLogged = JSON.parse(localStorage.getItem("userLogged"));
@@ -39,9 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	}
 });
 
-
 // gestione rendering pagine
-
 
 function renderHome() {
 	const userLogged = JSON.parse(localStorage.getItem("userLogged"));
@@ -171,7 +166,7 @@ function renderHome() {
 					alert("Logout successful!");
 					localStorage.removeItem("token"); // Rimuove il token
 					localStorage.removeItem("userLogged"); // Rimuove i dati utente
-					renderHome(); 
+					renderHome();
 				} else {
 					const errorData = await response.json();
 					alert(`Error: ${errorData.error}`);
@@ -496,7 +491,7 @@ function renderGallery() {
 						method: "POST",
 						headers: {
 							"Content-Type": "application/json",
-							Authorization: `Bearer ${token}`, 
+							Authorization: `Bearer ${token}`,
 						},
 						body: JSON.stringify({
 							title: imageTitle,
@@ -518,7 +513,7 @@ function renderGallery() {
 					user.photo_count = currentCount;
 					localStorage.setItem("userLogged", JSON.stringify(user));
 
-					renderGallery(); 
+					renderGallery();
 				} else {
 					const errorData = await response.json();
 					alert(`Error: ${errorData.error}`);
@@ -547,7 +542,6 @@ function renderGallery() {
 		});
 	});
 
-
 	const logOutBtn = document.querySelectorAll(".logOutBtn");
 	logOutBtn.forEach((button) => {
 		button.addEventListener("click", async () => {
@@ -566,9 +560,9 @@ function renderGallery() {
 
 				if (response.ok) {
 					alert("Logout successful!");
-					localStorage.removeItem("token"); 
-					localStorage.removeItem("userLogged"); 
-					renderHome(); 
+					localStorage.removeItem("token");
+					localStorage.removeItem("userLogged");
+					renderHome();
 				} else {
 					const errorData = await response.json();
 					alert(`Error: ${errorData.error}`);
@@ -580,8 +574,7 @@ function renderGallery() {
 	});
 }
 
-function renderPublicGallery(){
-
+function renderPublicGallery() {
 	const user = JSON.parse(localStorage.getItem("userLogged"));
 	const username = user.username;
 	const userCount = user.photo_count;
@@ -591,7 +584,6 @@ function renderPublicGallery(){
 	checkTokenValidity();
 	document.addEventListener("DOMContentLoaded", loadAllImages(id, token));
 
-	
 	const body = document.querySelector("body");
 	const navbar = `<nav><header class="header">
 	<nav class="navbar" id="doughyNav">
@@ -667,9 +659,9 @@ function renderPublicGallery(){
 
 				if (response.ok) {
 					alert("Logout successful!");
-					localStorage.removeItem("token"); 
-					localStorage.removeItem("userLogged"); 
-					renderHome(); 
+					localStorage.removeItem("token");
+					localStorage.removeItem("userLogged");
+					renderHome();
 				} else {
 					const errorData = await response.json();
 					alert(`Error: ${errorData.error}`);
@@ -686,7 +678,6 @@ function renderPublicGallery(){
 			renderGallery();
 		});
 	});
-
 }
 
 // handling caricamento, creazione di immagini e carosello
@@ -723,7 +714,7 @@ async function loadImages(userId, token) {
 	}
 }
 
-async function loadAllImages(userId, token){
+async function loadAllImages(userId, token) {
 	try {
 		const response = await fetch(
 			`http://localhost:3000/api/images/${userId}/publicGallery`,
@@ -738,7 +729,12 @@ async function loadAllImages(userId, token){
 			console.log(data);
 
 			data.forEach((image) => {
-				createAllUserImages(image.id, image.title, image.url, image.createdAt);
+				createAllUserImages(
+					image.id,
+					image.title,
+					image.url,
+					image.createdAt,
+				);
 				insertCarousel(
 					image.id,
 					image.title,
@@ -920,10 +916,8 @@ function createAllUserImages(id, title, url, createdAt) {
 	cardContent.appendChild(p);
 	card.appendChild(cardContent);
 
-
 	// Aggiungi la card al container
 	container.appendChild(card);
-
 }
 
 function insertCarousel(id, title, url, createdAt) {
