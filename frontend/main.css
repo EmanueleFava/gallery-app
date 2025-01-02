@@ -711,6 +711,27 @@ label {
 	gap: 15px;
 }
 
+.edit-form-container {
+	/* Hidden by default */
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	background-color: #e5edf1;
+	/* Light background for form */
+	padding: 20px;
+	border-radius: 8px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+	width: 300px;
+	z-index: 1000;
+}
+
+.edit-form-container form {
+	display: flex;
+	flex-direction: column;
+	gap: 15px;
+}
+
 /* Form Labels */
 label {
 	font-size: 14px;
@@ -755,7 +776,7 @@ input:focus {
 	background-color: #ED1787;
 	/* Red background for cancel */
 	color: #F1F1F1;
-	padding: 8px;
+	padding: 10px;
 	border: none;
 	border-radius: 5px;
 	cursor: pointer;
