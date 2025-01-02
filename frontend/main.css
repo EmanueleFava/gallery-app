@@ -40,6 +40,8 @@ header {
 	/* Spinge il contenitore dei bottoni a destra */
 }
 
+/* navbar buttons */
+
 .signUpBtn,
 .logInBtn,
 .logOutBtn,
@@ -72,6 +74,8 @@ header {
 	color: white;
 	transition: background-color 0.6s;
 }
+
+/* container */
 
 .container {
 	display: flex;
@@ -373,8 +377,11 @@ input:focus {
 	border-color: #3BC7F4;
 }
 
+
+/* form buttons */
+
 .login-button {
-	width: 95%;
+	width: 90%;
 	padding: 12px;
 	background-color: #ED1787;
 	color: white;
@@ -668,11 +675,13 @@ label {
 .delete-btn {
 	align-self: stretch;
 	border-radius: 6px;
-	background-color: #ED1787;
+	background-color: #fff;
+	/* Colore di background al passaggio del mouse */
+	color: #ED1787;
+	/* Colore del testo bianco */
 	gap: 8px;
 	overflow: hidden;
 	padding: 8px 8px;
-	color: #ffffff;
 	/* Colore del testo come il pulsante di login */
 	border: 2px solid #ED1787;
 	transition: background-color 0.3s, color 0.3s;
@@ -681,10 +690,9 @@ label {
 }
 
 .delete-btn:hover {
-	background-color: #fff;
-	/* Colore di background al passaggio del mouse */
-	color: #ED1787;
-	/* Colore del testo bianco */
+	color: white;
+	background-color: #ED1787;
+	border: 2px solid #ED1787;
 }
 
 
