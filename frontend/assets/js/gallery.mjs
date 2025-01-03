@@ -2,6 +2,8 @@ import { checkTokenValidity } from "./token.mjs";
 import { renderHome, renderSignUp, renderLogIn } from "./auth.mjs";
 import { loadImages, loadAllImages, createImages, createAllUserImages, insertCarousel, handleCarouselMove } from "./images.mjs";
 
+window.handleCarouselMove = handleCarouselMove;
+
 export function renderGallery() {
     const user = JSON.parse(localStorage.getItem("userLogged"));
     const username = user.username;
