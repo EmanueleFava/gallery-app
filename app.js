@@ -13,14 +13,19 @@ app.use(cors());
 app.use(bodyParser.json()); // Parsing JSON
 app.use(express.json());
 
+
+// utilizzo cartelle contenuti 
 app.use(express.static("frontend"));
-app.use("/assets", express.static(__dirname + "/frontend/assets"))
-app.use("/js", express.static(__dirname + "/frontend/js"))
+app.use(express.static(__dirname + "/frontend"));
+app.use("/assets", express.static(__dirname + "/frontend/assets"));
+
 
 // Imposta la cartella delle viste e il motore di template EJS
 app.set("views", "./frontend/views");
 app.set("view engine", "ejs");
 
+
+// rotta rendering pagina front end 
 app.get("/doughyClicks", (req, res) => {
 	res.render("index", { text: "Doughy Clicks!" });
   });
