@@ -14,6 +14,13 @@ app.use(bodyParser.json()); // Parsing JSON
 app.use(express.json());
 
 
+// Registrazione delle rotte
+app.use("/api/auth", authRoutes); // Rotte di autenticazione
+app.use("/api/images", imageRoutes); // Rotte immagini
+app.use("/api/admin", adminRoutes); // Rotte admin
+
+// Rotte Front End
+
 // utilizzo cartelle contenuti 
 app.use(express.static("frontend"));
 app.use(express.static(__dirname + "/frontend"));
@@ -26,14 +33,10 @@ app.set("view engine", "ejs");
 
 
 // rotta rendering pagina front end 
+// http://localhost:3000/doughyClicks
 app.get("/doughyClicks", (req, res) => {
 	res.render("index", { text: "Doughy Clicks!" });
   });
-
-// Registrazione delle rotte
-app.use("/api/auth", authRoutes); // Rotte di autenticazione
-app.use("/api/images", imageRoutes); // Rotte immagini
-app.use("/api/admin", adminRoutes); // Rotte admin
 
 // Middleware di gestione errori
 app.use((err, req, res, next) => {

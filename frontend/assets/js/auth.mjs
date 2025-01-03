@@ -132,6 +132,7 @@ export function renderHome() {
 				if (response.ok) {
 					alert("Logout successful!");
 					localStorage.removeItem("token"); // Rimuove il token
+					localStorage.removeItem("tokenCreationTime"); // Rimuove il tempo di creazione del token
 					localStorage.removeItem("userLogged"); // Rimuove i dati utente
 					renderHome();
 				} else {

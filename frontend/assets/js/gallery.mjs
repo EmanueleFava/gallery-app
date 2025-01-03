@@ -190,6 +190,7 @@ export function renderGallery() {
                 if (response.ok) {
                     alert("Logout successful!");
                     localStorage.removeItem("token");
+					localStorage.removeItem("tokenCreationTime"); 
                     localStorage.removeItem("userLogged");
                     renderHome();
                 } else {
@@ -289,6 +290,7 @@ export function renderPublicGallery() {
                 if (response.ok) {
                     alert("Logout successful!");
                     localStorage.removeItem("token");
+                    localStorage.removeItem("tokenCreationTime"); 
                     localStorage.removeItem("userLogged");
                     renderHome();
                 } else {
