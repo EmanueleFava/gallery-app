@@ -475,6 +475,7 @@ label {
 	font-weight: 500;
 }
 
+
 .add-photo-btn {
 	width: 200px;
 	align-self: center;
@@ -798,33 +799,33 @@ input:focus {
 }
 
 .logOutBtn {
-	background-color: #3BC7F4;
+	background-color: #ED1787;
 	color: #ffffff;
 }
 
 .logOutBtn:hover {
-	background-color: #ED1787;
+	background-color: #b11867;
 	color: white;
 	transition: background-color 0.6s;
 }
 
 .publicGalleryBtn {
-	background-color: #ebad78;
-	color: #ffffff;
+	background-color: #7f19e6;
+	color: white;
 }
 
 .publicGalleryBtn:hover {
-	background-color: #3BC7F4;
-	color: #ffffff;
+	background-color: #662ba0;
+	color: white;
 }
 
 .galleryBtn {
-	background-color: #ED1787;
+	background-color: #3BC7F4;
 	color: #ffffff;
 }
 
 .galleryBtn:hover {
-	background-color: #3BC7F4;
+	background-color: #2687db;
 	color: white;
 	transition: background-color 0.6s;
 }
