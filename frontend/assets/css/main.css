@@ -646,7 +646,7 @@ label {
 }
 
 .primary-btn:hover {
-	background-color: #ED1787;
+	background-color: #2687db;
 	/* Colore al passaggio del mouse come il pulsante di login */
 }
 
@@ -705,7 +705,7 @@ label {
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
-	background-color: #e5edf1;
+	background-color: #ffffff;
 	/* Light background for form */
 	padding: 20px;
 	border-radius: 8px;
@@ -726,7 +726,7 @@ label {
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
-	background-color: #e5edf1;
+	background-color: #ffffff;
 	/* Light background for form */
 	padding: 20px;
 	border-radius: 8px;
@@ -776,7 +776,7 @@ input:focus {
 }
 
 .submit-btn:hover {
-	background-color: #ED1787;
+	background-color: #2687db;
 	/* Darker blue on hover */
 }
 
@@ -794,7 +794,7 @@ input:focus {
 }
 
 .cancel-btn:hover {
-	background-color: #3BC7F4;
+	background-color: #b11867;
 	/* Slightly darker red on hover */
 }
 
